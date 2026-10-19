@@ -1,6 +1,10 @@
+import { useRef, useState } from "react";
 import { Link } from "react-router";
 
 const Login = () => {
+
+    const email = useRef(null);
+    const senha = useRef(null);
 
     function logar() {
         event.preventDefault();
@@ -39,7 +43,7 @@ const Login = () => {
         <div className="bg-slate-200 h-screen flex justify-center items-center">
             <div className="bg-white shadow-lg rounded-lg p-4">
                 <h1 className="font-bold text-xl mb-6">Seja bem-vindo(a)</h1>
-                <form onsubmit="logar()" className="flex flex-col w-80">
+                <form onSubmit={logar} className="flex flex-col w-80">
                     <label for="email" className="uppercase text-xs font-bold mb-2 block">Email</label>
                     <input
                         id="email"
