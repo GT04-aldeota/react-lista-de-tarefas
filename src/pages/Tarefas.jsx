@@ -1,6 +1,8 @@
-import { useRef, useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useRef, useState } from "react";
 import { AXIOS } from "../services";
 import { useNavigate } from "react-router";
+import { BiPencil, BiTrash } from "react-icons/bi";
 
 const Tarefas = () => {
 
@@ -82,6 +84,27 @@ const Tarefas = () => {
         }
     }
 
+    async function deletarTarefa(id) {
+        event.preventDefault();
+        try {
+            let resposta;
+            if(confirm("Deseja realmente apagar")){
+                resposta = await AXIOS.delete(`/tarefas/${id}`);
+            }
+
+            alert(resposta.data.mensagem);
+            buscarTarefas();
+
+        } catch (error) {
+            alert("Error: ", error.message);
+        }
+    }
+    
+
+    useEffect(() => {
+        buscarTarefas();
+    }, []);
+
     return (
         <div>
             <header
@@ -100,7 +123,34 @@ const Tarefas = () => {
 
             <main className="p-15 bg-slate-200">
                 <h1 className="text-3xl font-bold mb-6">Tarefas</h1>
-                <div id="tarefas" className="grid grid-cols-3 gap-4"></div>
+                <div id="tarefas" className="grid grid-cols-3 gap-4">
+                    {
+                        tarefas.length == 0 ? (
+                            <div>Crie sua primeira tarefa</div>
+                        ) : (
+                            tarefas.map(tarefa => (
+                                <div className="bg-white p-4 rounded-lg">
+                                    <h3 className="font-bold mb-4">{tarefa.titulo}</h3>
+                                    <p>{tarefa.descricao}</p>
+                                    <div className="flex justify-end gap-3">
+                                        <BiPencil
+                                            onClick={() => {
+                                                idEditar.current.value = tarefa.id,
+                                                tituloEditar.current.value = tarefa.titulo,
+                                                descricaoEditar.current.value = tarefa.descricao,
+                                                setFormEditar(true);
+                                            }}
+                                            className="cursor-pointer hover:fill-purple-500"
+                                        />
+                                        <BiTrash
+                                            onClick={() => deletarTarefa(tarefa.id)} className="cursor-pointer hover:fill-purple-500"
+                                        />
+                                    </div>
+                                </div>
+                            ))
+                        )
+                    }
+                </div>
                 <div
                     id="overlay"
                     onClick={() => {
