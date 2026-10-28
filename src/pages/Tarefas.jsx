@@ -35,7 +35,7 @@ const Tarefas = () => {
                 navigate("/");
             }
 
-            const resposta = await AXIOS.get(`/tarefas/${usuario.id}`);
+            const resposta = await AXIOS.get(`/tarefas?id=${usuario.id}`);
             setTarefas(resposta.data);
 
         } catch (error) {
